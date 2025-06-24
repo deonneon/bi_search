@@ -1,0 +1,133 @@
+{
+	"meta": {
+		"generatedAt": "2025-06-24T04:10:28.788Z",
+		"tasksAnalyzed": 15,
+		"totalTasks": 15,
+		"analysisCount": 15,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Set up development environment",
+			"complexityScore": 3,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the environment setup into: (1) Creating the conda environment, (2) Installing each required library with version checks, (3) Generating requirements.txt or environment.yml, and (4) Verifying the environment by running import/version checks.",
+			"reasoning": "This task is straightforward but involves multiple steps that must be executed in sequence. Each step is well-defined and low in cognitive complexity, but splitting them helps ensure reproducibility and reduces setup errors."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Implement MicroStrategy metadata ingestion",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand this task into: (1) REST API authentication, (2) Fetching metadata for each object type, (3) XML export parsing, (4) Data storage in DataFrame, (5) Error handling and logging, (6) Writing unit tests for all ingestion paths.",
+			"reasoning": "This task requires handling multiple data sources (REST and XML), robust error handling, and comprehensive testing. The need for both API and XML logic, plus test coverage, increases complexity."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Implement data cleaning and preprocessing",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Decompose into: (1) Text normalization (lowercase, punctuation removal), (2) Stop word removal, (3) Anti-pattern flagging (empty descriptions, generic names, versioning), (4) DataFrame integrity checks, (5) Unit tests for each cleaning step.",
+			"reasoning": "Multiple sequential data transformations and anti-pattern detection require careful implementation and validation, but each step is conceptually clear."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Implement Doc2Vec embedding",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand into: (1) Corpus preparation, (2) Model initialization, (3) Model training, (4) Vector inference, (5) Hyperparameter grid search, (6) Embedding evaluation and visualization.",
+			"reasoning": "This task involves both model training and evaluation, as well as parameter tuning, which increases the number of decision points and testing requirements."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Implement UMAP dimensionality reduction",
+			"complexityScore": 5,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down into: (1) UMAP initialization, (2) Fitting and transforming embeddings, (3) Hyperparameter tuning, (4) Storing reduced embeddings, (5) Evaluation and visualization of results.",
+			"reasoning": "UMAP application is conceptually simple but requires careful parameter tuning and validation to ensure meaningful dimensionality reduction."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement BERTopic clustering",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand into: (1) BERTopic model initialization, (2) Model fitting, (3) Topic extraction, (4) Evaluation (coherence, silhouette), (5) HDBSCAN parameter experiments, (6) Visualization of clustering results.",
+			"reasoning": "Clustering with BERTopic involves several steps, including model configuration, evaluation, and parameter experimentation, each requiring careful implementation and validation."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Implement cluster labeling",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Decompose into: (1) Defining labeling rules and keywords, (2) Implementing spaCy-based text processing, (3) Calculating indicator prevalence, (4) Assigning labels, (5) Manual and automated validation.",
+			"reasoning": "Rule-based labeling with NLP and validation introduces moderate complexity, especially with the need for both automated and manual review."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Implement UMAP scatter plot visualization",
+			"complexityScore": 5,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down into: (1) Preparing data for plotting, (2) Creating scatter plot function, (3) Implementing color coding, (4) Adding hover and selection features, (5) Ensuring accessibility (colorblind-friendly), (6) Testing interactivity.",
+			"reasoning": "Interactive visualization requires handling both data and UI aspects, but each step is well-scoped and can be developed independently."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Implement BERTopic visualizations",
+			"complexityScore": 5,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Expand into: (1) Topic similarity map, (2) Bar charts for top words, (3) Custom topic size visualization, (4) Interactivity and accessibility, (5) Export options for visualizations.",
+			"reasoning": "This task involves leveraging existing visualization tools and adding enhancements, which is moderately complex but manageable with clear subtasks."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Implement tabular summary of clusters",
+			"complexityScore": 5,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Decompose into: (1) Metric calculation per cluster, (2) Table formatting and styling, (3) Sorting and filtering, (4) Export functionality, (5) Validation and testing of outputs.",
+			"reasoning": "Generating and formatting summary tables is a standard data task, but export and validation add some complexity."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Implement recommendation engine",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand into: (1) Defining best practice rules, (2) Analyzing anti-pattern clusters, (3) Implementing Jinja2 templates, (4) Mapping anti-patterns to recommendations, (5) Applying recommendations, (6) Testing with sample scenarios.",
+			"reasoning": "Rule-based recommendation generation with templating and mapping logic is complex, especially with the need for robust testing and customization."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Implement export functionality",
+			"complexityScore": 4,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down into: (1) Combining data for export, (2) Implementing export formats (CSV, Excel, JSON), (3) Adding metadata/timestamps, (4) Error handling for file operations, (5) User interface for export options.",
+			"reasoning": "Exporting data is a common task, but supporting multiple formats and robust error handling adds some complexity."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Develop main Jupyter Notebook workflow",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Expand into: (1) Notebook structure and sectioning, (2) Setup and environment checks, (3) Data preparation cells, (4) Modeling cells, (5) Evaluation and reporting, (6) Interactive widgets, (7) Static HTML export and validation.",
+			"reasoning": "Coordinating the entire workflow in a notebook, ensuring modularity, interactivity, and reproducibility, is a high-complexity integration task."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Implement parameterization and configuration",
+			"complexityScore": 5,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Decompose into: (1) Creating parameter widgets, (2) File upload input, (3) Dropdowns for modeling parameters, (4) Configuration cell implementation, (5) Papermill integration and testing.",
+			"reasoning": "Parameterization with widgets and automation tools is moderately complex, requiring careful propagation of parameters through the workflow."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Create documentation and README",
+			"complexityScore": 4,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down into: (1) Writing README.md, (2) Adding function docstrings, (3) Inline code comments, (4) CONTRIBUTING.md, (5) Sphinx API documentation, (6) Troubleshooting section.",
+			"reasoning": "Documentation is essential but not technically complex; however, covering all aspects (README, API docs, contribution guidelines) requires multiple focused subtasks."
+		}
+	]
+}

@@ -10,7 +10,50 @@
         "priority": "high",
         "dependencies": [],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create the Conda Environment",
+            "description": "Set up a new, isolated Conda environment with a specific Python version, following 2024 best practices for naming and reproducibility.",
+            "dependencies": [],
+            "details": "Use the command `conda create -n <env-name> python=3.10` (or the latest supported version for your libraries). Ensure the environment is created outside the base environment for isolation. Activate the environment using `conda activate <env-name>`.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Install Required Libraries with Version Checks",
+            "description": "Install Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+ in the environment, verifying each installation and handling errors robustly.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use `pip install gensim==4.3.2 bertopic>=0.16.0 umap-learn>=0.5.6`. After each install, check the installed version with `pip show <package>`. Implement error handling to catch and report installation failures or version mismatches.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Generate requirements.txt or environment.yml",
+            "description": "Export the environment's package list to a requirements.txt or environment.yml file for reproducibility and sharing.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use `conda env export > environment.yml` for a full environment specification, or `pip freeze > requirements.txt` for pip-based installs. Ensure the file accurately reflects the installed versions and dependencies.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Verify Environment by Running Import and Version Checks",
+            "description": "Test the environment by importing each library and printing its version, ensuring all dependencies are correctly installed and functional.",
+            "dependencies": [
+              3
+            ],
+            "details": "Write and run a Python script that imports gensim, bertopic, and umap, printing their versions. Include exception handling to catch import errors or version mismatches. Validate that all libraries are operational and meet the specified version requirements.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 2,
@@ -23,7 +66,72 @@
           1
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Secure REST API Authentication",
+            "description": "Design and implement robust REST API authentication using 2024 best practices, such as OAuth 2.0 or token-based authentication with strong password policies, token revocation, session expiration, and access control lists (ACLs). Ensure all credentials are transmitted over HTTPS and sensitive data is never stored in plain text.",
+            "dependencies": [],
+            "details": "Follow guidelines such as enforcing strong passwords, using secure hashing (bcrypt/Argon2), implementing token revocation and short token lifespans, and applying least-privilege access controls. Reference latest security recommendations from sources like Zuplo, Cobalt, and Check Point.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Fetch and Validate Metadata for Each Object Type",
+            "description": "Develop logic to fetch metadata for all relevant object types from the authenticated REST API, ensuring correct handling of authentication tokens and response validation.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use requests or httpx (latest stable versions) for API calls. Validate and parse JSON responses, ensuring schema compliance and handling missing or malformed fields robustly.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Parse and Ingest XML Export Data",
+            "description": "Implement XML parsing routines to extract and normalize data from XML exports, ensuring compatibility with downstream processing and robust handling of edge cases.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use lxml or ElementTree (latest stable) for parsing. Validate XML structure, handle namespaces, and ensure all required fields are extracted. Prepare for integration with DataFrame storage.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Store and Process Data in DataFrames",
+            "description": "Design and implement logic to store both API and XML-ingested data in pandas DataFrames, ensuring type consistency, deduplication, and readiness for downstream analysis.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use pandas (latest stable) for DataFrame operations. Ensure all columns are typed correctly, handle missing values, and prepare for integration with Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+ for later analysis.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Robust Error Handling and Logging",
+            "description": "Integrate comprehensive error handling and structured logging across all ingestion and processing steps, following 2024 best practices for observability and reliability.",
+            "dependencies": [
+              4
+            ],
+            "details": "Use Python's logging module (latest best practices) for structured logs. Catch and log all exceptions, including API errors, XML parsing issues, and DataFrame inconsistencies. Ensure logs include context for debugging and support alerting.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Write Unit Tests for All Ingestion Paths",
+            "description": "Develop thorough unit tests covering all REST API, XML, and DataFrame ingestion logic, including edge cases and error scenarios, using pytest (latest stable) and mocking external dependencies.",
+            "dependencies": [
+              5
+            ],
+            "details": "Ensure test coverage for authentication, metadata fetching, XML parsing, DataFrame storage, and error handling. Validate integration with Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+ where applicable. Use parameterized tests and fixtures for comprehensive validation.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 3,
@@ -36,7 +144,61 @@
           2
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Text Normalization",
+            "description": "Implement text normalization by converting all text to lowercase and removing punctuation. Ensure compatibility with Gensim 4.3.2 and robust error handling for non-string inputs. Use regex for punctuation removal and validate with sample edge cases.",
+            "dependencies": [],
+            "details": "Apply normalization as the first step in the pipeline. Use Python's built-in string methods and regex for efficiency. Log and handle exceptions for malformed or unexpected input types.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Stop Word Removal",
+            "description": "Remove stop words from the normalized text using a curated stop word list. Ensure the stop word list is up-to-date and compatible with Gensim 4.3.2. Allow for custom stop word extension and robust error handling for empty or malformed input.",
+            "dependencies": [
+              1
+            ],
+            "details": "Leverage Gensim's STOPWORDS set and allow user-supplied additions. Validate that stop word removal does not strip all content from short texts. Log any anomalies.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Anti-pattern Flagging",
+            "description": "Detect and flag anti-patterns such as empty descriptions, generic names (e.g., 'test', 'sample'), and versioning artifacts (e.g., 'v1.0', '2024'). Use regex and keyword matching for detection. Ensure robust error handling for edge cases.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement pattern matching for common anti-patterns. Provide clear flags or annotations in the DataFrame for downstream processing. Log flagged entries for review.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "DataFrame Integrity Checks",
+            "description": "Perform integrity checks on the DataFrame after cleaning steps. Validate column types, check for missing or duplicate entries, and ensure compatibility with BERTopic 0.16.0+ and UMAP 0.5.6+ input requirements.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use pandas validation methods to check for nulls, duplicates, and correct data types. Ensure the DataFrame meets the input schema expected by downstream libraries. Log and handle any inconsistencies.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Unit Tests for Each Cleaning Step",
+            "description": "Develop comprehensive unit tests for each cleaning step using pytest. Cover edge cases, error handling, and expected outputs. Validate integration with Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+.",
+            "dependencies": [
+              4
+            ],
+            "details": "Write tests for normalization, stop word removal, anti-pattern flagging, and DataFrame integrity. Include tests for malformed input, empty strings, and library-specific edge cases. Ensure all tests pass before deployment.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 4,
@@ -49,7 +211,72 @@
           3
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Corpus Preparation",
+            "description": "Collect, clean, and preprocess the text corpus using best practices for NLP in 2024. Ensure compatibility with Gensim 4.3.2 and BERTopic 0.16.0+. Implement robust error handling for data loading and cleaning steps. Include unit tests to validate preprocessing outputs.",
+            "dependencies": [],
+            "details": "Use tokenization, stopword removal, and normalization. Validate corpus integrity and handle encoding issues. Test with sample data to ensure pipeline robustness.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Model Initialization",
+            "description": "Initialize Gensim Word2Vec (v4.3.2) and BERTopic (v0.16.0+) models with recommended parameters. Set up UMAP (v0.5.6+) for dimensionality reduction. Ensure all models are instantiated with reproducible seeds and error handling for parameter validation.",
+            "dependencies": [
+              1
+            ],
+            "details": "Configure Word2Vec with appropriate vector size, window, and min_count. For BERTopic, select a suitable embedding model (e.g., 'all-MiniLM-L6-v2') and configure UMAP with best-practice parameters. Include tests for model instantiation and parameter checks.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Model Training",
+            "description": "Train the Gensim Word2Vec model on the prepared corpus and generate embeddings. Train BERTopic using either its internal embedding pipeline or custom embeddings. Implement error handling for training interruptions and convergence issues. Validate training with test splits.",
+            "dependencies": [
+              2
+            ],
+            "details": "Monitor training logs and lifecycle events. Use callbacks or checkpoints for long runs. Test model outputs for expected shape and quality.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Vector Inference",
+            "description": "Infer document and word vectors using the trained models. Ensure batch processing for scalability and implement error handling for out-of-vocabulary terms or corrupted inputs. Validate inference with known test cases.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use Gensim's .wv interface for word vectors and BERTopic's transform methods for document-topic inference. Test for correct vector dimensions and handle missing data gracefully.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Hyperparameter Grid Search",
+            "description": "Perform systematic hyperparameter tuning for Word2Vec, BERTopic, and UMAP using grid search. Track performance metrics and implement robust error handling for failed configurations. Validate grid search logic with synthetic datasets.",
+            "dependencies": [
+              4
+            ],
+            "details": "Tune parameters such as vector size, window, min_count (Word2Vec), n_neighbors, min_dist (UMAP), and topic-related parameters (BERTopic). Use cross-validation and log all results for reproducibility.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Embedding Evaluation and Visualization",
+            "description": "Evaluate the quality of embeddings using quantitative metrics (e.g., coherence, silhouette score) and visualize results with UMAP and BERTopic's built-in tools. Implement error handling for visualization failures and validate with test plots.",
+            "dependencies": [
+              5
+            ],
+            "details": "Generate 2D/3D plots of embeddings, topic distributions, and cluster assignments. Compare metrics across hyperparameter settings. Include automated tests for evaluation scripts.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 5,
@@ -62,7 +289,61 @@
           4
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "UMAP Initialization",
+            "description": "Set up the UMAP environment using version 0.5.6+ with robust error handling. Ensure compatibility with Gensim 4.3.2 and BERTopic 0.16.0+. Validate installation and import of all required libraries. Prepare the random seed for reproducibility and configure the computational environment for efficient processing.",
+            "dependencies": [],
+            "details": "Test UMAP import and version. Check for GPU/CPU compatibility. Set random_state for reproducibility. Implement try/except blocks for initialization errors.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Fitting and Transforming Embeddings",
+            "description": "Load or generate embeddings using Gensim 4.3.2 or BERTopic 0.16.0+. Fit UMAP to the embeddings and transform them to lower dimensions. Ensure robust error handling for data loading, fitting, and transformation steps.",
+            "dependencies": [
+              1
+            ],
+            "details": "Validate input embeddings for shape and type. Use UMAP's fit_transform method. Catch and log errors during fitting and transformation. Write unit tests for edge cases (e.g., empty or malformed embeddings).",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Hyperparameter Tuning",
+            "description": "Systematically tune UMAP hyperparameters (n_neighbors, min_dist, metric, n_components) using grid search or Bayesian optimization. Use cross-validation or silhouette score to assess clustering quality. Ensure parameter ranges are appropriate for the dataset and task.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement automated search (e.g., sklearn's GridSearchCV or Optuna). Log parameter combinations and results. Validate that best parameters generalize across data splits. Include tests for parameter boundary conditions.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Storing Reduced Embeddings",
+            "description": "Persist the reduced embeddings to disk in a robust, versioned format (e.g., NumPy .npy, Pandas DataFrame, or HDF5). Include metadata such as UMAP parameters, library versions, and timestamps. Implement error handling for file I/O and data integrity checks.",
+            "dependencies": [
+              3
+            ],
+            "details": "Test saving and loading routines. Validate file integrity and metadata completeness. Ensure compatibility with downstream analysis tools.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Evaluation and Visualization of Results",
+            "description": "Evaluate the quality of the reduced embeddings using quantitative metrics (e.g., clustering scores, trustworthiness) and qualitative visualization (e.g., scatter plots, cluster overlays). Use best practices for interpretability and reproducibility. Validate visualizations and metrics with test cases.",
+            "dependencies": [
+              4
+            ],
+            "details": "Generate 2D/3D plots with clear labeling. Compute and log evaluation metrics. Test visualization code for edge cases (e.g., small or highly imbalanced datasets). Document findings and parameter settings.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 6,
@@ -75,7 +356,72 @@
           5
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "BERTopic Model Initialization",
+            "description": "Initialize the BERTopic model with appropriate parameters and libraries (Gensim 4.3.2, BERTopic 0.16.0+, UMAP 0.5.6+). Ensure proper dimensionality reduction and clustering setup.",
+            "dependencies": [],
+            "details": "Use UMAP for dimensionality reduction and HDBSCAN for clustering. Set a fixed random state for reproducibility.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Model Fitting",
+            "description": "Fit the BERTopic model to the dataset, ensuring robust error handling and proper parameter tuning.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use try-except blocks for error handling and validate model fit through logging and monitoring.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Topic Extraction",
+            "description": "Extract topics from the fitted model, applying topic reduction techniques if necessary.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use HDBSCAN's min_cluster_size parameter for topic control and apply manual reduction methods if needed.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Evaluation (Coherence, Silhouette)",
+            "description": "Evaluate the quality of extracted topics using coherence and silhouette scores.",
+            "dependencies": [
+              3
+            ],
+            "details": "Implement metrics to assess topic coherence and silhouette scores for cluster quality assessment.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "HDBSCAN Parameter Experiments",
+            "description": "Experiment with different HDBSCAN parameters to optimize clustering performance.",
+            "dependencies": [
+              2
+            ],
+            "details": "Test variations of min_cluster_size, metric, and cluster_selection_method to find optimal settings.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Visualization of Clustering Results",
+            "description": "Visualize the clustering results to interpret topic distributions and relationships.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use dimensionality reduction techniques like UMAP to visualize clusters in a lower-dimensional space.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 7,
@@ -88,7 +434,61 @@
           6
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Labeling Rules and Keywords",
+            "description": "Establish clear, domain-specific labeling rules and curate comprehensive keyword lists for each indicator. Ensure rules are unambiguous and align with 2024 best practices for rule-based NLP labeling.",
+            "dependencies": [],
+            "details": "Consult subject matter experts to define indicator criteria. Use recent literature and datasets to identify relevant keywords and phrases. Document all rules and keywords for reproducibility and future updates.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement spaCy-Based Text Processing Pipeline",
+            "description": "Develop a robust text processing pipeline using spaCy (latest stable version), ensuring efficient tokenization, lemmatization, and rule-based matching. Integrate error handling and logging throughout.",
+            "dependencies": [
+              1
+            ],
+            "details": "Utilize spaCy's rule-based matcher for keyword/phrase detection. Tune pipeline components for performance and accuracy. Ensure compatibility with Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+ for downstream tasks. Write unit tests for each pipeline component.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Calculate Indicator Prevalence",
+            "description": "Aggregate and compute the prevalence of each indicator across the dataset based on matches from the text processing pipeline.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement efficient aggregation logic. Validate prevalence calculations with sample data. Include error handling for missing or malformed input. Provide summary statistics and visualizations as needed.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Assign Labels to Text Data",
+            "description": "Apply the defined rules to assign indicator labels to each text sample, ensuring consistency and traceability.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use spaCy's rule-based matching and custom logic to assign labels. Store label assignments with provenance (rule/keyword matched). Implement batch processing and logging. Write integration tests to verify correct label assignment.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Manual and Automated Validation",
+            "description": "Conduct both manual review and automated validation of label assignments to ensure high precision and recall. Incorporate feedback loops for rule refinement.",
+            "dependencies": [
+              4
+            ],
+            "details": "Sample labeled data for expert review. Implement automated validation metrics (precision, recall, F1). Use error analysis to identify and address systematic labeling issues. Document validation results and update rules/keywords as needed.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 8,
@@ -102,7 +502,73 @@
           6
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Preparing Data for Plotting",
+            "description": "Clean, preprocess, and transform data into a suitable format for visualization using libraries like Pandas and NumPy.",
+            "dependencies": [],
+            "details": "Ensure data is properly cleaned and formatted for plotting. Use Gensim 4.3.2 for text data processing if applicable.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Creating Scatter Plot Function",
+            "description": "Develop a function to create scatter plots using a library like Plotly or Matplotlib.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement a scatter plot function that can handle various data types and is customizable for different visualization needs.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implementing Color Coding",
+            "description": "Add color coding to the scatter plot to differentiate between data points based on specific criteria.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use colorblind-friendly palettes to ensure accessibility. Consider using libraries like Seaborn for statistical graphics.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Adding Hover and Selection Features",
+            "description": "Enhance the scatter plot with interactive features such as hover text and selection capabilities.",
+            "dependencies": [
+              3
+            ],
+            "details": "Utilize Plotly's interactive features to add hover text and selection tools, improving user engagement.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Ensuring Accessibility (Colorblind-Friendly)",
+            "description": "Validate that the visualization is accessible by using color palettes that are distinguishable for colorblind users.",
+            "dependencies": [
+              3
+            ],
+            "details": "Test the visualization with colorblind-friendly palettes to ensure all users can interpret the data effectively.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Testing Interactivity",
+            "description": "Conduct thorough testing of the interactive features to ensure they function as expected across different platforms.",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "Verify that hover, zoom, and selection features work correctly in various environments and browsers.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 9,
@@ -115,7 +581,61 @@
           6
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Topic Similarity Map Visualization",
+            "description": "Develop a topic similarity map using BERTopic (>=0.16.0) and UMAP (>=0.5.6) to visualize topic relationships. Ensure cosine similarity is used for embeddings and provide clustering options. Include robust error handling for missing or malformed embeddings.",
+            "dependencies": [],
+            "details": "Use BERTopic's visualize_heatmap and UMAP for dimensionality reduction. Allow users to adjust n_clusters and validate input data. Test with various topic model outputs to ensure reliability.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Create Bar Charts for Top Words per Topic",
+            "description": "Generate interactive bar charts displaying the top words for each topic using Gensim 4.3.2 and BERTopic. Ensure charts are accessible and follow 2024 visualization best practices for clarity and color contrast.",
+            "dependencies": [
+              1
+            ],
+            "details": "Leverage matplotlib or Plotly for interactivity. Allow users to select topics and dynamically update the chart. Validate that top words are correctly extracted and handle cases with missing or duplicate words.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop Custom Topic Size Visualization",
+            "description": "Design a visualization that clearly represents the size of each topic, such as a bubble chart or scaled bar chart. Ensure the visualization is customizable and accurately reflects topic prevalence.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement size scaling based on topic frequency. Allow customization of color and layout. Include error handling for topics with zero or undefined size. Test with datasets of varying topic distributions.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Enhance Interactivity and Accessibility",
+            "description": "Integrate interactive features (hover, zoom, filter) and ensure all visualizations are accessible (keyboard navigation, ARIA labels, colorblind-friendly palettes). Follow 2024 accessibility standards.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use Plotly or Altair for interactivity. Validate accessibility with automated tools and user testing. Provide alternative text and keyboard shortcuts. Ensure robust error handling for interactive elements.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement Export Options for Visualizations",
+            "description": "Enable users to export visualizations in multiple formats (PNG, SVG, interactive HTML). Ensure exports preserve interactivity where possible and include metadata for reproducibility.",
+            "dependencies": [
+              4
+            ],
+            "details": "Integrate export functionality using library-specific methods. Validate exported files for correctness and accessibility. Handle errors gracefully if export fails or unsupported formats are requested.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 10,
@@ -129,7 +649,64 @@
           7
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Metric Calculation per Cluster",
+            "description": "Compute relevant metrics (e.g., coherence, topic diversity, cluster size) for each cluster using Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+. Ensure proper parameter tuning and robust error handling during metric computation.",
+            "dependencies": [],
+            "details": "Implement metric calculations using the latest APIs and recommended parameter settings for each library. Handle exceptions gracefully and log errors for debugging. Validate input data types and cluster assignments before processing.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Table Formatting and Styling",
+            "description": "Format the computed metrics into a visually appealing and accessible table, following 2024 best practices for data visualization and table design.",
+            "dependencies": [
+              1
+            ],
+            "details": "Apply clear headers, alternating row colors, and conditional formatting to highlight key metrics. Use minimalist or enhanced styles as appropriate, referencing current style guides. Ensure accessibility and readability, including font size and color contrast.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Sorting and Filtering",
+            "description": "Enable interactive sorting and filtering of the table based on metric values and cluster attributes.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement sorting by any column and filtering by metric thresholds or cluster labels. Ensure robust handling of edge cases (e.g., empty filters, missing values) and maintain table styling after sorting/filtering.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Export Functionality",
+            "description": "Provide options to export the formatted and filtered table to common formats (CSV, Excel, HTML), preserving styling where possible.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use reliable libraries for export (e.g., pandas, openpyxl, or HTML/CSS for styled exports). Validate export outputs for completeness and formatting fidelity. Handle export errors gracefully and provide user feedback.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Validation and Testing of Outputs",
+            "description": "Thoroughly test each component (metrics, formatting, sorting/filtering, export) for correctness, robustness, and usability.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Develop unit and integration tests for each subtask. Validate metric accuracy, table appearance, sorting/filtering logic, and export integrity. Include edge case testing and error handling verification. Document test coverage and results.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 11,
@@ -143,7 +720,74 @@
           10
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Defining Best Practice Rules",
+            "description": "Establish a comprehensive set of best practice rules for topic modeling using Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+, focusing on 2024 research, parameter tuning, and robust error handling.",
+            "dependencies": [],
+            "details": "Gather the latest 2024 best practices from research and official documentation. Specify recommended parameter ranges, error handling strategies, and library-specific guidelines for each component.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Analyzing Anti-Pattern Clusters",
+            "description": "Identify and categorize common anti-patterns and suboptimal configurations in topic modeling workflows involving the specified libraries.",
+            "dependencies": [
+              1
+            ],
+            "details": "Review recent literature, GitHub issues, and changelogs to extract frequent mistakes, misconfigurations, and problematic parameter choices. Cluster these anti-patterns for systematic mapping.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implementing Jinja2 Templates",
+            "description": "Develop Jinja2 templates to generate rule-based recommendations and configuration snippets tailored to detected anti-patterns.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Design modular Jinja2 templates that can dynamically render recommendations, code snippets, and configuration files based on the anti-pattern clusters and best practice rules.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Mapping Anti-Patterns to Recommendations",
+            "description": "Create a mapping logic that links each identified anti-pattern cluster to specific best practice recommendations and Jinja2 template outputs.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Implement a mapping layer (e.g., Python dictionary or class) that associates each anti-pattern with actionable recommendations and the corresponding Jinja2 template for remediation.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Applying Recommendations",
+            "description": "Integrate the mapping and templating system into the topic modeling workflow to automatically detect anti-patterns and apply recommended fixes.",
+            "dependencies": [
+              4
+            ],
+            "details": "Develop logic to scan user configurations or code, identify anti-patterns, and generate/apply the recommended changes using the Jinja2 templates.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Testing with Sample Scenarios",
+            "description": "Design and execute robust tests using sample scenarios to validate each component, ensuring correct detection, recommendation, and application of best practices.",
+            "dependencies": [
+              5
+            ],
+            "details": "Create diverse test cases covering typical and edge-case anti-patterns. Validate that the system correctly identifies issues, generates appropriate recommendations, and applies fixes. Include error handling and validation for each library version.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 12,
@@ -157,7 +801,61 @@
           11
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Combining Data for Export",
+            "description": "Aggregate data from various sources into a unified format for export.",
+            "dependencies": [],
+            "details": "Utilize libraries like Gensim 4.3.2 and BERTopic 0.16.0+ for data aggregation and topic modeling. Ensure proper parameter tuning for optimal performance.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementing Export Formats",
+            "description": "Support multiple export formats such as CSV, Excel, and JSON.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use libraries like pandas for CSV and Excel, and json for JSON exports. Ensure compatibility with UMAP 0.5.6+ for dimensionality reduction if needed.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Adding Metadata/Timestamps",
+            "description": "Incorporate metadata and timestamps into exported files for tracking and versioning.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use Python's datetime module to add timestamps. Include metadata such as data source and export date.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Error Handling for File Operations",
+            "description": "Implement robust error handling for file operations to ensure reliability.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use try-except blocks to catch and log exceptions during file operations. Ensure proper logging and notification mechanisms are in place.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "User Interface for Export Options",
+            "description": "Develop a user-friendly interface to select export options and formats.",
+            "dependencies": [
+              4
+            ],
+            "details": "Utilize frameworks like Flask or Django to create a web interface. Include options for selecting export formats, metadata inclusion, and error handling preferences.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 13,
@@ -181,7 +879,81 @@
           12
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Notebook Structure and Sectioning",
+            "description": "Plan and implement a clear, modular notebook structure using Markdown headers, narrative text, and logical cell grouping. Ensure the notebook is organized for readability, reproducibility, and audience appropriateness, following 2024 best practices.",
+            "dependencies": [],
+            "details": "Include sections for introduction, setup, data preparation, modeling, evaluation, interactivity, and export. Use descriptive Markdown and narrative to guide users through the workflow.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implement Setup and Environment Checks",
+            "description": "Create cells to check and install required library versions (Gensim 4.3.2, BERTopic 0.16.0+, UMAP 0.5.6+), verify Python version, and set random seeds for reproducibility. Add robust error handling for missing or incompatible dependencies.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use try/except blocks to catch import errors, print informative messages, and optionally auto-install missing packages. Validate environment consistency and document requirements.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Develop Data Preparation Cells",
+            "description": "Add cells for data loading, cleaning, and preprocessing. Include parameterized functions for data splits and transformations, with error handling and validation checks.",
+            "dependencies": [
+              2
+            ],
+            "details": "Test data integrity, handle missing values, and ensure compatibility with downstream modeling steps. Save intermediate results for reproducibility.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Build Modeling Cells with Parameter Tuning",
+            "description": "Implement modeling cells using Gensim, BERTopic, and UMAP with specified versions. Include hyperparameter tuning, modular function definitions, and robust error handling.",
+            "dependencies": [
+              3
+            ],
+            "details": "Enable parameter customization, log model configurations, and validate model outputs. Ensure code is modular for reuse and testing.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Create Evaluation and Reporting Cells",
+            "description": "Add cells for model evaluation, metrics calculation, and result visualization. Include narrative explanations and automated tests to validate evaluation logic.",
+            "dependencies": [
+              4
+            ],
+            "details": "Use plots, tables, and Markdown to present results. Implement assertions or test cases to check metric correctness and model performance.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Integrate Interactive Widgets",
+            "description": "Incorporate interactive widgets (e.g., ipywidgets) for parameter selection, data exploration, and dynamic visualization. Ensure widgets are robust and user-friendly.",
+            "dependencies": [
+              5
+            ],
+            "details": "Test widget functionality, handle invalid user input gracefully, and document widget usage for end users.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Implement Static HTML Export and Validation",
+            "description": "Add cells and instructions for exporting the notebook to static HTML. Validate that all outputs render correctly and that the exported file is self-contained and reproducible.",
+            "dependencies": [],
+            "details": "Test export process, check for missing outputs or broken links, and include a checklist for final validation.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 14,
@@ -194,7 +966,63 @@
           13
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Creating Parameter Widgets",
+            "description": "Design and implement interactive widgets for parameter input, ensuring compatibility with Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+. Include robust error handling and validation for user inputs, and follow 2024 best practices for widget-based parameterization.",
+            "dependencies": [],
+            "details": "Use libraries such as ipywidgets or Streamlit for widget creation. Validate parameter ranges and types, and provide user feedback for invalid entries. Ensure widgets are modular and reusable.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "File Upload Input",
+            "description": "Implement a secure and user-friendly file upload component that allows users to upload datasets for modeling. Ensure support for common file types (CSV, TXT) and validate file content and structure.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate file upload widgets with error handling for unsupported formats, file size limits, and malformed data. Provide clear feedback and instructions to users.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Dropdowns for Modeling Parameters",
+            "description": "Create dropdown menus for selecting key modeling parameters (e.g., embedding models, number of topics, UMAP parameters) with options tailored to Gensim, BERTopic, and UMAP best practices.",
+            "dependencies": [
+              1
+            ],
+            "details": "Populate dropdowns with recommended and compatible options, including version-specific features. Ensure selections are validated and propagated to downstream components.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Configuration Cell Implementation",
+            "description": "Develop a configuration cell that aggregates all user-selected parameters and uploaded files, validates the configuration, and prepares the environment for modeling execution.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Implement logic to collect, validate, and display the final configuration. Include error messages for missing or incompatible settings. Ensure seamless integration with notebook or pipeline workflows.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Papermill Integration and Testing",
+            "description": "Integrate Papermill for parameterized notebook execution, automate testing of the full workflow, and validate outputs for correctness and robustness. Ensure compatibility with the specified library versions and handle errors gracefully.",
+            "dependencies": [
+              4
+            ],
+            "details": "Write Papermill scripts to run notebooks with different parameter sets. Implement automated tests for each component and the end-to-end workflow. Log errors and results for review.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 15,
@@ -207,7 +1035,72 @@
           14
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Writing README.md",
+            "description": "Draft a comprehensive README.md that introduces the project, outlines its purpose, installation steps, usage examples, supported library versions (Gensim 4.3.2, BERTopic 0.16.0+, UMAP 0.5.6+), parameter tuning guidance, and robust error handling strategies. Include sections for testing and validation procedures.",
+            "dependencies": [],
+            "details": "Follow 2024 best practices by providing clear, concise instructions, real-world usage examples, and explicit version requirements. Ensure the README is accessible to both newcomers and experienced users, and reference automated documentation where appropriate.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Adding Function Docstrings",
+            "description": "Add detailed docstrings to all public functions, classes, and modules, adhering to PEP 257 and modern conventions. Include parameter descriptions, return types, error handling notes, and usage examples, especially for functions involving Gensim, BERTopic, and UMAP.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use type hints and provide examples for complex functions. Ensure docstrings are kept up-to-date and facilitate automated documentation generation (e.g., Sphinx).",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Inline Code Comments",
+            "description": "Insert concise inline comments throughout the codebase to clarify non-obvious logic, parameter tuning decisions, and robust error handling mechanisms. Focus on sections involving integration of Gensim, BERTopic, and UMAP.",
+            "dependencies": [
+              2
+            ],
+            "details": "Avoid redundant comments; prioritize clarity for complex or critical code paths. Ensure comments complement, not duplicate, docstrings.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "CONTRIBUTING.md",
+            "description": "Create a CONTRIBUTING.md file that outlines contribution guidelines, code style requirements, documentation standards, testing and validation expectations, and procedures for reporting issues or suggesting improvements.",
+            "dependencies": [
+              3
+            ],
+            "details": "Reference best practices for Python documentation and testing. Specify requirements for supporting the listed library versions and robust error handling in contributions.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Sphinx API Documentation",
+            "description": "Set up and configure Sphinx to automatically generate API documentation from docstrings. Ensure the documentation covers all public interfaces, includes parameter tuning notes, and highlights error handling strategies.",
+            "dependencies": [
+              4
+            ],
+            "details": "Integrate Sphinx with the CI pipeline to keep documentation up-to-date. Include working code examples and validation tests in the generated docs.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Troubleshooting Section",
+            "description": "Develop a troubleshooting section (in README.md or as a separate document) that addresses common issues, error messages, and debugging tips related to Gensim 4.3.2, BERTopic 0.16.0+, and UMAP 0.5.6+. Include validation steps and links to relevant documentation.",
+            "dependencies": [
+              5
+            ],
+            "details": "Base troubleshooting advice on real user feedback and error reports. Provide actionable solutions and reference robust error handling implemented in the codebase.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       }
     ],
     "metadata": {
