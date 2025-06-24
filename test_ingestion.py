@@ -113,12 +113,18 @@ def run_simple_demo():
     df = client.metadata_to_dataframe(metadata)
     print(f"   ✓ Created DataFrame with {len(df)} rows and {len(df.columns)} columns")
     
+    # Save to CSV
+    print("\n4. Saving data to CSV...")
+    csv_filename = "dummy_microstrategy_metadata.csv"
+    df.to_csv(csv_filename, index=False)
+    print(f"   ✓ Data saved to {csv_filename}")
+    
     # Show sample data
-    print("\n4. Sample Data Preview:")
+    print("\n5. Sample Data Preview:")
     print(df[['name', 'type', 'owner', 'status']].head(10))
     
     # Generate summary
-    print("\n5. Summary Statistics:")
+    print("\n6. Summary Statistics:")
     summary = client.get_metadata_summary(df)
     print(f"   Total Objects: {summary['total_objects']}")
     print(f"   Object Types: {summary['object_types']}")
