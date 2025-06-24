@@ -1,0 +1,219 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Set up development environment",
+        "description": "Create a conda environment and install required libraries for the project.",
+        "details": "Create a new conda environment with Python 3.10. Install the following libraries with specific versions:\n- gensim==4.3.1\n- bertopic==0.14.1\n- umap-learn==0.5.3\n- pandas==2.0.2\n- scikit-learn==1.2.2\n- matplotlib==3.7.1\n- plotly==5.14.1\n- jupyter==1.0.0\n- numpy==1.24.3\n\nCreate a requirements.txt or environment.yml file to ensure reproducibility.",
+        "testStrategy": "Verify the environment by activating it and running a simple script that imports all required libraries. Check versions match the specified ones.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement MicroStrategy metadata ingestion",
+        "description": "Develop a script to ingest MicroStrategy metadata using REST API or XML export.",
+        "details": "Use the requests library (version 2.31.0) to interact with the MicroStrategy REST API. Implement functions to authenticate, fetch metadata for reports, dossiers, datasets, attributes, and metrics. For XML export, use the xml.etree.ElementTree module. Store the data in a pandas DataFrame. Implement error handling and logging using the logging module.",
+        "testStrategy": "Create unit tests using pytest (version 7.3.1) to verify successful API connection, data retrieval, and correct parsing of both REST and XML formats. Use mock data to test edge cases.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement data cleaning and preprocessing",
+        "description": "Clean and normalize the ingested metadata, flagging known anti-patterns.",
+        "details": "Use pandas and numpy for data manipulation. Implement the following steps:\n1. Convert text to lowercase\n2. Remove punctuation using regex\n3. Remove stop words using NLTK (version 3.8.1)\n4. Flag anti-patterns:\n   - Empty descriptions\n   - Generic names (e.g., 'Copy of...')\n   - Inconsistent version naming\nUse pandas string methods for efficient text processing. Create a separate column for each flag.",
+        "testStrategy": "Write unit tests to verify each cleaning step. Use a small, diverse dataset to ensure all anti-patterns are correctly identified. Verify the integrity of the DataFrame after preprocessing.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Doc2Vec embedding",
+        "description": "Create document vectors for each artifact using Gensim's Doc2Vec.",
+        "details": "Use gensim.models.doc2vec.Doc2Vec to create embeddings. Implement the following steps:\n1. Prepare corpus using gensim.models.doc2vec.TaggedDocument\n2. Initialize Doc2Vec model with vector_size=300, min_count=2, epochs=40\n3. Train the model on the prepared corpus\n4. Infer vectors for all documents\nImplement a parameter grid search using sklearn.model_selection.GridSearchCV to find optimal hyperparameters.",
+        "testStrategy": "Use gensim's built-in evaluation methods to assess model quality. Implement cosine similarity tests between known similar documents. Use visualization techniques (e.g., t-SNE) to visually inspect the quality of embeddings.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement UMAP dimensionality reduction",
+        "description": "Apply UMAP to reduce high-dimensional vectors to 2D/3D for clustering and visualization.",
+        "details": "Use umap.UMAP from the umap-learn library. Implement the following steps:\n1. Initialize UMAP with n_neighbors=15, min_dist=0.1, n_components=2\n2. Fit and transform the Doc2Vec embeddings\n3. Implement a function for hyperparameter tuning, testing different values for n_neighbors and min_dist\n4. Store the reduced embeddings for further analysis",
+        "testStrategy": "Visualize the reduced embeddings using matplotlib. Implement metrics to evaluate the quality of the reduction, such as trustworthiness and continuity. Compare different UMAP parameters visually and quantitatively.",
+        "priority": "medium",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement BERTopic clustering",
+        "description": "Generate topic clusters from Doc2Vec embeddings using BERTopic.",
+        "details": "Use bertopic.BERTopic to perform clustering. Implement the following steps:\n1. Initialize BERTopic model with embedding_model=None (since we're using custom embeddings)\n2. Fit the model on the document texts and UMAP-reduced embeddings\n3. Extract topics and their keywords using c-TF-IDF\n4. Implement functions to evaluate coherence and silhouette scores\n5. Experiment with different HDBSCAN parameters (min_cluster_size, min_samples)",
+        "testStrategy": "Use sklearn.metrics.silhouette_score to evaluate clustering quality. Implement topic coherence evaluation using gensim.models.coherencemodel. Visualize topics using BERTopic's built-in visualization methods.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement cluster labeling",
+        "description": "Label clusters as best practice, anti-pattern, or usage themes.",
+        "details": "Develop a rule-based system to label clusters:\n1. Define keywords/phrases associated with best practices and anti-patterns\n2. Use spaCy (version 3.5.3) for advanced text processing and named entity recognition\n3. Implement functions to calculate the prevalence of best practice/anti-pattern indicators in each cluster\n4. Assign labels based on predefined thresholds\n5. For usage themes, use the top n keywords from c-TF-IDF as labels",
+        "testStrategy": "Manually review a sample of labeled clusters to verify accuracy. Implement unit tests for individual labeling rules. Calculate inter-rater reliability if multiple reviewers are involved in verification.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement UMAP scatter plot visualization",
+        "description": "Create 2D UMAP scatter plots colored by cluster.",
+        "details": "Use plotly (version 5.14.1) to create interactive scatter plots:\n1. Create a function that takes UMAP coordinates and cluster labels as input\n2. Use plotly.graph_objects.Scatter for plotting\n3. Implement color coding based on cluster labels\n4. Add hover information showing document details\n5. Implement zooming and selection capabilities\n6. Ensure the plot is colorblind-friendly using a appropriate color palette (e.g., viridis)",
+        "testStrategy": "Verify the plot renders correctly with a sample dataset. Test interactive features like zooming and hovering. Use colorblind simulation tools to verify accessibility.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement BERTopic visualizations",
+        "description": "Create interactive BERTopic visualizations including topic similarity map and bar charts.",
+        "details": "Utilize BERTopic's built-in visualization methods and enhance them with plotly:\n1. Implement topic similarity map using bertopic.visualize_topics()\n2. Create bar charts for top-n words per topic using bertopic.visualize_barchart()\n3. Implement a custom visualization for topic size distribution\n4. Ensure all visualizations are interactive and colorblind-friendly\n5. Implement options to export visualizations as static images",
+        "testStrategy": "Test visualizations with different dataset sizes. Verify interactivity in Jupyter environment. Use accessibility tools to check color contrast and colorblind-friendliness.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement tabular summary of clusters",
+        "description": "Generate a tabular summary of clusters with key metrics including number of objects and percentage of bad practices.",
+        "details": "Use pandas to create and manipulate the summary table:\n1. Create a function that takes cluster labels and metadata as input\n2. Calculate key metrics for each cluster (size, % of anti-patterns, top keywords)\n3. Use pandas styler to format the table for better readability\n4. Implement sorting and filtering options\n5. Add a function to export the summary as CSV and Excel files",
+        "testStrategy": "Verify calculations with manual checks. Test export functionality with different file formats. Ensure the table renders correctly in Jupyter notebook.",
+        "priority": "medium",
+        "dependencies": [
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement recommendation engine",
+        "description": "Generate suggested fixes for anti-pattern clusters, including rename guidelines and description templates.",
+        "details": "Develop a rule-based system for generating recommendations:\n1. Define a set of best practices for naming conventions and descriptions\n2. Implement functions to analyze common issues in anti-pattern clusters\n3. Use Jinja2 (version 3.1.2) templating engine to generate customized recommendations\n4. Create a mapping between anti-pattern types and recommendation templates\n5. Implement a function to apply recommendations to individual artifacts",
+        "testStrategy": "Create a test suite with various anti-pattern scenarios. Verify that appropriate recommendations are generated for each case. Test the application of recommendations on a sample dataset.",
+        "priority": "high",
+        "dependencies": [
+          7,
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement export functionality",
+        "description": "Develop functionality to export recommendations and cluster summaries as CSV/Excel for stakeholders.",
+        "details": "Use pandas ExcelWriter and to_csv methods for export:\n1. Implement a function to combine cluster summaries and recommendations\n2. Create options for different export formats (CSV, Excel, JSON)\n3. Add metadata and timestamp to exports\n4. Implement error handling for file writing issues\n5. Create a user-friendly interface for selecting export options",
+        "testStrategy": "Test export functionality with various data sizes. Verify the integrity of exported data by re-importing and comparing. Test error handling with scenarios like insufficient permissions or disk space.",
+        "priority": "low",
+        "dependencies": [
+          10,
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Develop main Jupyter Notebook workflow",
+        "description": "Create a Jupyter Notebook with clear sections for setup, data prep, modeling, evaluation, and reporting.",
+        "details": "Structure the notebook with the following sections:\n1. Setup: Environment check, library imports\n2. Data Prep: Ingestion, cleaning, preprocessing\n3. Modeling: Doc2Vec, UMAP, BERTopic\n4. Evaluation: Clustering quality metrics, topic coherence\n5. Reporting: Visualizations, summaries, recommendations\nUse jupyter-widgets (ipywidgets 8.0.6) for interactive elements. Implement cell magic for timing expensive operations. Use nbconvert (version 7.4.0) to create a static HTML version of the notebook.",
+        "testStrategy": "Run the notebook end-to-end with sample data. Verify all sections execute without errors. Test interactive elements. Review the generated static HTML for completeness.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement parameterization and configuration",
+        "description": "Add parameterized cells for easy re-running with different configurations.",
+        "details": "Use ipywidgets to create interactive parameter selection:\n1. Implement widgets for MicroStrategy connection details\n2. Create input fields for file upload (XML case)\n3. Add dropdown menus for selecting modeling parameters (e.g., Doc2Vec dimensions, UMAP parameters)\n4. Implement a configuration cell that collects all parameters\n5. Use papermill (version 2.4.0) to enable notebook parameterization for automated runs",
+        "testStrategy": "Test the notebook with various parameter combinations. Verify that changes in parameters correctly propagate through the workflow. Test papermill execution with different parameter sets.",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Create documentation and README",
+        "description": "Develop comprehensive documentation including a README file and inline code comments.",
+        "details": "Create documentation using Markdown and docstrings:\n1. Write a detailed README.md explaining project setup, usage, and interpretation of results\n2. Add docstrings to all functions using Google style format\n3. Include inline comments for complex operations\n4. Create a separate CONTRIBUTING.md for development guidelines\n5. Use sphinx (version 7.0.1) to generate API documentation\n6. Include a section on troubleshooting common issues",
+        "testStrategy": "Review documentation for completeness and clarity. Test README instructions on a fresh environment. Verify generated API documentation for accuracy. Have a peer review the documentation for understandability.",
+        "priority": "low",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-24T04:06:09.192Z",
+      "updated": "2025-06-24T04:06:27.979Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

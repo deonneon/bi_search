@@ -1,0 +1,78 @@
+<context>
+# Overview
+This project builds a data-science pipeline that ingests MicroStrategy metadata (reports, dossiers, datasets, attributes, metrics, etc.) and clusters them to uncover usage patterns, best-practice archetypes, and common anti-patterns. The goal is to help BI developers and administrators quickly understand their content landscape, identify poorly designed artifacts (e.g., empty descriptions, duplicated report names, bad version naming), and surface actionable recommendations.
+
+The deliverable is an interactive Jupyter Notebook (and optionally modular Python scripts) that can be executed on-prem or in the cloud. Business users receive clear visualisations and tabular reports of clusters/topics, along with quality scores and remediation suggestions.
+
+# Core Features
+- **Metadata Ingestion & Pre-processing**  
+  ‑ Parse MicroStrategy REST or exported XML to extract report names, descriptions, object types, creation dates, owners, folder paths, etc.  
+  ‑ Clean, normalise text (lower-casing, punctuation removal, stop words).  
+  ‑ Flag known anti-patterns (empty description, generic names like "Copy of…", semantic version chaos).
+- **Corpus Creation with Doc2Vec**  
+  ‑ Represent each artefact as a document vector using Gensim's Doc2Vec.  
+  ‑ Hyper-parameter search for optimal vector size, epochs, window.
+- **Dimensionality Reduction with UMAP**  
+  ‑ Reduce high-dimensional vectors to 2-D/3-D for clustering and visualisation.  
+  ‑ Tune neighbours/min_dist for better separation.
+- **Topic / Cluster Modelling with BERTopic**  
+  ‑ Generate topic clusters from Doc2Vec embeddings.  
+  ‑ Use c-TF-IDF to extract representative keywords.  
+  ‑ Evaluate coherence & silhouette scores.  
+  ‑ Label clusters (best practice vs anti-pattern, usage themes).
+- **Visual Analytics**  
+  ‑ 2-D UMAP scatter plots coloured by cluster.  
+  ‑ Interactive BERTopic visualisations (topic similarity map, bar charts).  
+  ‑ Tabular summary of clusters with key metrics (#objects, %bad practices).
+- **Recommendation Engine**  
+  ‑ For each anti-pattern cluster, generate suggested fixes (rename guidelines, description templates).  
+  ‑ Export CSV/Excel for stakeholders.
+- **Notebook Workflow**  
+  ‑ Parameterised cells for easy re-run.  
+  ‑ Clear sectioning: Setup → Data Prep → Modelling → Evaluation → Reporting.
+
+# User Experience
+- **Personas**: BI Developers, BI Administrators, Data Governance Leads.  
+- **Flow**: Open notebook → configure MicroStrategy connection or upload export → run all → review visual outputs and remediation spreadsheet.  
+- **UX Considerations**: Code cells have concise explanations, hide heavy outputs behind widgets, colour-blind friendly palettes.
+</context>
+<PRD>
+# Technical Architecture
+- **Data Layer**: MicroStrategy REST API or XML export → Pandas DataFrame.  
+- **Embedding Layer**: Gensim Doc2Vec (Python 3.10).  
+- **Dimensionality Reduction**: UMAP-learn.  
+- **Clustering**: BERTopic (uses HDBSCAN under the hood).  
+- **Environment**: Jupyter Notebook (.ipynb), pip/conda environment file.  
+- **Outputs**: Interactive HTML visualisations, CSV/Excel reports.
+
+# Development Roadmap
+1. **Phase 0 – Environment Setup**  
+   ‑ Create conda env, install gensim, bertopic, umap-learn, pandas, scikit-learn, matplotlib, plotly.  
+2. **Phase 1 – Data Ingestion**  
+   ‑ Build script to pull/export metadata.  
+   ‑ Data cleaning & anti-pattern flags.  
+3. **Phase 2 – Embedding & Modelling**  
+   ‑ Train Doc2Vec; save model artefacts.  
+   ‑ Apply UMAP; experiment with parameters.  
+   ‑ Run BERTopic; evaluate & iterate.  
+4. **Phase 3 – Visualisation & Reporting**  
+   ‑ Create UMAP scatter and BERTopic dashboards.  
+   ‑ Generate cluster tables with remediation suggestions.  
+5. **Phase 4 – Packaging & Documentation**  
+   ‑ Finalise notebook with markdown explanations.  
+   ‑ Provide README and env files.
+
+# Logical Dependency Chain
+Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4. Each phase depends on successful completion of the previous.
+
+# Risks and Mitigations
+- **High-dimensional sparsity affects clustering quality** → Use UMAP and parameter tuning; consider alternative embeddings (Sentence-BERT).
+- **Inconsistent metadata quality** → Implement preprocessing rules and heuristic flags.  
+- **Large dataset size** → Allow sampling; optimise memory via gensim iterator.  
+- **Library incompatibility in Jupyter** → Pin versions in env; CI check.
+
+# Appendix
+- BERTopic docs: https://maartengr.github.io/BERTopic/  
+- UMAP docs: https://umap-learn.readthedocs.io/  
+- MicroStrategy REST API: https://www2.microstrategy.com/producthelp/current/rest-api
+</PRD> 
